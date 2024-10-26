@@ -1,16 +1,136 @@
-<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<div id="game-container">
+    <h1>Click Counting Game</h1>
+    <button id="click-button">Click Me!</button>
+    <p id="click-count">Clicks: 0</p>
+    <p id="medal-count">Gold Medals: 0</p>
+    <p id="diamond-count">Diamond Medals: 0</p>
+    <p id="obsidian-count">Obsidian Medals: 0</p>
+    <div id="medals"></div>
+  </div>
+  
+  
+  
+  
+  
 
-<div id="app">{{ message }}</div>
+
+<style>
+#game-container {
+  text-align: center;
+  margin-top: 50px;
+  font-family: Arial, sans-serif;
+}
+
+#click-button {
+  padding: 15px 30px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+#medals {
+  margin-top: 20px;
+}
+
+.gold-medal {
+  width: 50px;
+  height: 50px;
+  background-color: gold;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 5px;
+}
+
+.diamond-medal {
+  width: 50px;
+  height: 50px;
+  background-color: deepskyblue;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 5px;
+}
+
+.obsidian-medal {
+  width: 50px;
+  height: 50px;
+  background-color: black;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 5px;
+}
+
+
+
+
+</style>
+
+
+
+
+
 
 <script>
-  const { createApp, ref } = Vue
 
-  createApp({
-    setup() {
-      const message = ref('Hello vue!')
-      return {
-        message
-      }
+
+let clickCount = 0;
+let goldMedals = 0;
+let diamondMedals = 0;
+let obsidianMedals = 0;
+
+const clickButton = document.getElementById('click-button');
+const clickCountDisplay = document.getElementById('click-count');
+const medalCountDisplay = document.getElementById('medal-count');
+const diamondCountDisplay = document.getElementById('diamond-count');
+const obsidianCountDisplay = document.getElementById('obsidian-count');
+const medalsContainer = document.getElementById('medals');
+
+clickButton.addEventListener('click', () => {
+  clickCount++;
+  clickCountDisplay.textContent = `Clicks: ${clickCount}`;
+
+  if (clickCount % 2 === 0) {
+    goldMedals++;
+    medalCountDisplay.textContent = `Gold Medals: ${goldMedals}`;
+    addGoldMedal();
+
+    // Check if 2 gold medals are reached
+    if (goldMedals % 2 === 0) {
+      diamondMedals++;
+      diamondCountDisplay.textContent = `Diamond Medals: ${diamondMedals}`;
+      addDiamondMedal();
     }
-  }).mount('#app')
+
+    // Check if 2 diamond medals are reached
+    if (diamondMedals % 2 === 0 && diamondMedals > 0) {
+      obsidianMedals++;
+      obsidianCountDisplay.textContent = `Obsidian Medals: ${obsidianMedals}`;
+      addObsidianMedal();
+    }
+  }
+});
+
+function addGoldMedal() {
+  const medal = document.createElement('div');
+  medal.classList.add('gold-medal');
+  medalsContainer.appendChild(medal);
+}
+
+function addDiamondMedal() {
+  const medal = document.createElement('div');
+  medal.classList.add('diamond-medal');
+  medalsContainer.appendChild(medal);
+}
+
+function addObsidianMedal() {
+  const medal = document.createElement('div');
+  medal.classList.add('obsidian-medal');
+  medalsContainer.appendChild(medal);
+}
+
+
+
+
+
+
+
+
 </script>
