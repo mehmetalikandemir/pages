@@ -1,0 +1,106 @@
+<div id="container"></div>
+<button onclick="createRandomBouncingBall()">Add Bouncing Ball</button>
+
+  
+  
+  
+  
+
+
+<style>
+
+
+  #container {
+  position: relative;
+  width: 100%;
+  height: 400px; /* Adjust as needed */
+  border: 1px solid black;
+  overflow: hidden;
+}
+
+.ball {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 0;
+}
+
+
+
+</style>
+
+
+
+
+
+
+<script>
+
+let gravity = 0.5;
+let bounceStrength = 10;
+let damping = 0.8;
+
+function createRandomBouncingBall() {
+  // Create a new ball element
+  const ball = document.createElement('div');
+  ball.classList.add('ball');
+
+  // Set a random color for the ball
+  ball.style.backgroundColor = getRandomColor();
+
+  // Set a random horizontal position within the container
+  const container = document.getElementById('container');
+  const maxX = container.offsetWidth - 50; // Adjust to ball width
+  ball.style.left = `${Math.floor(Math.random() * maxX)}px`;
+
+  // Add the ball to the container
+  container.appendChild(ball);
+
+  // Start the bouncing animation
+  startBouncing(ball);
+}
+
+function startBouncing(ball) {
+  let velocity = bounceStrength;
+  let position = 0;
+
+  const animation = setInterval(() => {
+    // Apply gravity to velocity
+    velocity -= gravity;
+    position += velocity;
+
+    // Check if the ball hits the ground
+    if (position <= 0) {
+      position = 0;
+      velocity = -velocity * damping; // Reverse velocity and apply damping
+
+      // Stop bouncing if velocity is very low
+      if (Math.abs(velocity) < 1) {
+        clearInterval(animation);
+      }
+    }
+
+    // Move the ball
+    ball.style.bottom = `${position}px`;
+  }, 20); // Update every 20 milliseconds
+}
+
+function getRandomColor() {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+
+
+
+
+
+
+
+
+</script>
