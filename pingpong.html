@@ -1,0 +1,136 @@
+<div id="game-container">
+  <div id="ball"></div>
+  <div id="paddle"></div>
+  <div id="score">Score: 0</div>
+</div>
+
+
+
+<style>
+#game-container {
+  position: relative;
+  width: 600px;
+  height: 400px;
+  background-color: black;
+  overflow: hidden;
+  border: 2px solid white;
+}
+
+#ball {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#paddle {
+  width: 100px;
+  height: 20px;
+  background-color: white;
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#score {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: white;
+  font-size: 20px;
+}
+
+</style>
+
+
+
+
+
+
+<script>
+
+const gameContainer = document.getElementById('game-container');
+const ball = document.getElementById('ball');
+const paddle = document.getElementById('paddle');
+const scoreDisplay = document.getElementById('score');
+
+let ballX = gameContainer.offsetWidth / 2;
+let ballY = gameContainer.offsetHeight / 2;
+let ballSpeedX = 3;
+let ballSpeedY = 3;
+let paddleX = (gameContainer.offsetWidth - paddle.offsetWidth) / 2;
+let score = 0;
+
+// Paddle movement
+document.addEventListener('mousemove', (e) => {
+  const containerRect = gameContainer.getBoundingClientRect();
+  paddleX = e.clientX - containerRect.left - paddle.offsetWidth / 2;
+  paddleX = Math.max(0, Math.min(gameContainer.offsetWidth - paddle.offsetWidth, paddleX));
+  paddle.style.left = `${paddleX}px`;
+});
+
+// Ball movement and collision detection
+function gameLoop() {
+  ballX += ballSpeedX;
+  ballY += ballSpeedY;
+
+  // Ball wall collision (left and right walls)
+  if (ballX <= 0 || ballX + ball.offsetWidth >= gameContainer.offsetWidth) {
+    ballSpeedX = -ballSpeedX;
+  }
+
+  // Ball ceiling collision (top wall)
+  if (ballY <= 0) {
+    ballSpeedY = -ballSpeedY;
+  }
+
+  // Ball hits paddle
+  const paddleTop = gameContainer.offsetHeight - paddle.offsetHeight - 10;
+  if (
+    ballY + ball.offsetHeight >= paddleTop &&
+    ballX + ball.offsetWidth >= paddleX &&
+    ballX <= paddleX + paddle.offsetWidth
+  ) {
+    ballSpeedY = -ballSpeedY;
+    score++;
+    scoreDisplay.textContent = `Score: ${score}`;
+  }
+
+  // Ball falls below paddle (game over)
+  if (ballY + ball.offsetHeight >= gameContainer.offsetHeight) {
+    alert('Game Over! Your final score is ' + score);
+    resetGame();
+  }
+
+  ball.style.left = `${ballX}px`;
+  ball.style.top = `${ballY}px`;
+
+  requestAnimationFrame(gameLoop);
+}
+
+// Reset the game
+function resetGame() {
+  ballX = gameContainer.offsetWidth / 2;
+  ballY = gameContainer.offsetHeight / 2;
+  ballSpeedX = 3 * (Math.random() > 0.5 ? 1 : -1);
+  ballSpeedY = 3;
+  score = 0;
+  scoreDisplay.textContent = `Score: ${score}`;
+}
+
+// Start the game loop
+resetGame();
+gameLoop();
+
+
+
+
+
+
+
+</script>
